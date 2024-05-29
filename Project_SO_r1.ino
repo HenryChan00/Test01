@@ -2,6 +2,7 @@
 // By Henry Chan
 // Date: Dec2023
 // Rev: 0 - 1st release
+// Rev: 1 - Changed to Serial via USB; no software UART 
 #include <Wire.h>
 #include <MCP23017.h>
 #include <SoftwareSerial.h>
@@ -13,7 +14,7 @@
 MCP23017 mcp = MCP23017(MCP23017_ADDR);
 MCP23017 mcp1 = MCP23017(MCP23017_ADDR1);
 
-SoftwareSerial mySerial(11, 12); // RX, TX
+//SoftwareSerial mySerial(11, 12); // RX, TX
 String rec_data = "00";
 
 bool interrupted = false;
@@ -39,7 +40,7 @@ void led_output()
 void setup() {
   Wire.begin();
   Serial.begin(115200);
-  mySerial.begin(115200);
+  //mySerial.begin(115200);
 
   mcp.init();
   mcp1.init();
@@ -54,8 +55,8 @@ void setup() {
 
 void loop() {
   Serial.println("restart again!!");
-  while (mySerial.available()==0) {} //wait for data available
-  rec_data = mySerial.readString();  //read until timeout
+  while (Serial.available()==0) {} //wait for data available
+  rec_data = Serial.readString();  //read until timeout
   rec_data.trim();                        // remove any \r \n whitespace at the end of the String
   if (rec_data == "00") { // all off
     out_PortA = 0x00;
